@@ -67,9 +67,25 @@
                             $query = mysqli_query($con, "SELECT COUNT(*) as count FROM user_following WHERE follower_id = $id");
                             $result = mysqli_fetch_assoc($query);
                             echo $result['count'];
-                ?>
-            </span>
+                        ?>
+                            </span>
                 </p> 
+                
+            </div>
+          </div>
+          <div class="bottom">
+            <div class="box">
+                <p>
+                    Your Followers &nbsp; &nbsp; <span style="color: green; font-weight: 600;">
+                        <?php
+                            $id = $_SESSION['id'];
+                            $query = mysqli_query($con, "SELECT COUNT(*) as count FROM user_following WHERE following_id = $id");
+                            $result = mysqli_fetch_assoc($query);
+                            echo $result['count'];
+                        ?>
+                            </span>
+                </p> 
+                
             </div>
           </div>
        </div>
