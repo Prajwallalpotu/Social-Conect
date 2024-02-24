@@ -60,34 +60,39 @@
           </div>
           <div class="bottom">
             <div class="box">
-                <p>
-                    Your Followings &nbsp; &nbsp; <span style="color: green; font-weight: 600;">
+            <p>
+                Your Following &nbsp; &nbsp;
+                <button onclick="window.location.href='following_list.php'" style="cursor:pointer; padding:2px 10px;">
+                    <span style="color: green; font-weight: 600;">
                         <?php
                             $id = $_SESSION['id'];
                             $query = mysqli_query($con, "SELECT COUNT(*) as count FROM user_following WHERE follower_id = $id");
                             $result = mysqli_fetch_assoc($query);
                             echo $result['count'];
                         ?>
-                            </span>
-                </p> 
-                
+                    </span>
+                </button>
+            </p>
             </div>
           </div>
           <div class="bottom">
             <div class="box">
-                <p>
-                    Your Followers &nbsp; &nbsp; <span style="color: green; font-weight: 600;">
+            <p>
+                Your Followers &nbsp; &nbsp;
+                <button onclick="window.location.href='followers_list.php'" style="cursor:pointer; padding:2px 10px;">
+                    <span style="color: green; font-weight: 600;">
                         <?php
                             $id = $_SESSION['id'];
                             $query = mysqli_query($con, "SELECT COUNT(*) as count FROM user_following WHERE following_id = $id");
                             $result = mysqli_fetch_assoc($query);
                             echo $result['count'];
                         ?>
-                            </span>
-                </p> 
-                
+                    </span>
+                </button>
+            </p>
             </div>
           </div>
+
        </div>
 
     </main>
@@ -100,52 +105,39 @@
                 <th>Follow</th>
             </tr>
             <?php
-            include("php/config.php");
+                include("php/config.php");
 
-            $followerId = $_SESSION['id']; // The ID of the logged-in user
+                $followerId = $_SESSION['id']; // The ID of the logged-in user
 
-            $sql2 = "SELECT * FROM users";
-            $result2 = $con->query($sql2);
+                $sql = "SELECT u.Id, u.Username, uf.id AS following_id
+                        FROM users u
+                        LEFT JOIN user_following uf ON u.Id = uf.following_id AND uf.follower_id = $followerId
+                        WHERE u.Id <> $followerId AND uf.id IS NULL";
 
-            if ($result2->num_rows > 0) {
-                while ($row = $result2->fetch_assoc()) {
-                    $Uname = $row['Username'];
-                    $userId = $row['Id'];
 
-                    // Check if the user is already followed by the logged-in user
-                    $checkQuery = "SELECT id FROM user_following WHERE follower_id = $followerId AND following_id = $userId";
-                    $checkResult = $con->query($checkQuery);
+                $result = $con->query($sql);
 
-                    if ($checkResult->num_rows > 0) {
-                        // User is already followed
-                        $isFollowed = 'true';
-                        $buttonText = 'Unfollow';
-                        $buttonColor = '#d26868'; 
-                    } else {
-                        // User is not followed
-                        $isFollowed = 'false';
-                        $buttonText = 'Follow';
-                        $buttonColor = '#699053';
-                    }
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $Uname = $row['Username'];
+                        $userId = $row['Id'];
+                        $isFollowed = ($row['following_id'] !== null);
 
-                    if ($Uname != $res_Uname) {
                         echo "<tr>
-                              <td>$Uname</td>
-                              <td><button class='follow-button' id='follow' data-userid='$userId' data-followed='$isFollowed' style='background-color: $buttonColor; border-radius: 5px; border: 0; padding: 5px 10px;'>$buttonText</button></td>
-                          </tr>";
+                            <td>$Uname</td>
+                            <td><button class='follow-button' data-userid='$userId' data-followed='" . ($isFollowed ? 'true' : 'false') . "' style='background-color: " . ($isFollowed ? '#d26868' : '#699053') . "; border-radius: 5px; border: 0; padding: 5px 10px; color: 'white'>" . ($isFollowed ? 'Unfollow' : 'Follow') . "</button></td>
+                        </tr>";
                     }
+                } else {
+                    echo "<tr><td colspan='2'>No users found!</td></tr>";
                 }
-            } else {
-                echo "<tr><td colspan='2'>No users found!</td></tr>";
-            }
 
-            $con->close();
+                $con->close();
             ?>
+
         </table>
     </div>
 </section>
-
-
 
 <script>
     const followButtons = document.querySelectorAll('.follow-button');
@@ -160,13 +152,14 @@
                 this.innerHTML = 'Follow';
                 this.setAttribute('data-followed', 'false');
                 this.classList.remove('followed');
-                console.log('follower_id:', userId);
 
                 // Send AJAX request to remove the relationship from the database
                 fetch(`unfollow.php?userId=${userId}`)
                     .then(response => {
                         if (response.ok) {
                             alert('You have unfollowed this user successfully.');
+                            // Optionally, you can remove the user from the UI immediately without waiting for a page refresh
+                            // Example: this.closest('div.user').remove();
                         } else {
                             alert('Error unfollowing the user. Please try again later.');
                         }
@@ -178,13 +171,11 @@
                 this.classList.add('followed');
 
                 // Send AJAX request to add the relationship to the database
-                    console.log('follower_id:', userId);
                 fetch(`follow.php?userId=${userId}`)
                     .then(response => {
                         if (response.ok) {
-
                             alert('You are now following this user.');
-
+                            // Optionally, you can update the UI to reflect the user is followed immediately
                         } else {
                             alert('Error following the user. Please try again later.');
                         }
