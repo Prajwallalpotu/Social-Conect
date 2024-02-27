@@ -53,16 +53,25 @@ h2{
     padding: 10px;
 }
 
-button {
-    font-size: 20px;
-    background-color: #3498db;
+.back button {
+    font-size: 16px;
+    background-color: #000000;
     color: white;
-    padding: 5px 10px;
+    padding: 5px 20px;
     border: none;
     cursor: pointer;
+    border-radius: 10px;
+    margin-left: 20px;
+    transition: 0.3s ease-in;
+}
+.row h2 {
+    text-align: center;
+    margin-left: -20px;
+    flex-grow: 1;
 }
 
-h2 {
-    text-align: center;
-    margin: 0;
+.back button:hover{
+    background-color: #fff;
+    color: #000000;
+    border: 1px solid black;
 }

@@ -51,6 +51,16 @@ body{
     border: 1px solid #ccc;
     outline: none;
 }
+.form-box form .input input[type="radio"]{
+    width: 20%;
+    height: 10px;
+}
+/* .form-box form .input input[type="file"]{
+    align-items: center;
+} */
+.form-box form .input .row{
+    display: flex;
+}
 .btn{
     height: 35px;
     background: rgba(76,68,182,0.808);
@@ -72,6 +82,9 @@ body{
 }
 .links{
     margin-bottom: 15px;
+}
+.row{
+    display: flex;
 }
 
 /********* Home *****************/
@@ -96,10 +109,15 @@ body{
 .right-links a{
     padding: 0 10px;
 }
+.main1{
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+}
 main{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center;
+    justify-content: center; */
     margin-top: 60px;
 }
 .main-box{

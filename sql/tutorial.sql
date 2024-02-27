@@ -15,3 +15,16 @@ CREATE TABLE user_following (
     FOREIGN KEY (follower_id) REFERENCES users(Id),
     FOREIGN KEY (following_id) REFERENCES users(Id)
 );
+
+ALTER TABLE users
+ADD COLUMN Gender ENUM('Male', 'Female');
+
+
+CREATE TABLE user_details (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    Profile_Img VARCHAR(255),
+    Bio TEXT,
+    Link VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(Id)
+);
+

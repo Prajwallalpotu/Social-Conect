@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css" type="text/css">
+    <link rel="stylesheet" href="index2.css" type="text/css">
     <title>Home</title>
 </head>
 <body>
-    <h2>Your Followers</h2>
+    <div class="row">
+        <div class="back">
+        <button onclick="javascript:self.history.back()">Back</buttton>
+        </div>
+        <h2>Your Followers</h2>
+    </div>
     <section class="table_section">
         <div class="table_start">
             <table class="display_table" rules="rows">
@@ -42,7 +47,7 @@
                     // Display the list of followings in a table
 
                     if (empty($followingList)) {
-                        echo "<p>You are not following anyone yet.</p>";
+                        echo "<p>You are not followed by anyone yet.</p>";
                     } else {
                         foreach ($followingList as $following) {
                             echo "<tr data-userid='{$following['id']}'>";
@@ -62,7 +67,6 @@
         const response = await fetch(`unfollow.php?followingId=${followingId}`);
 
         if (response.ok) {
-            alert('User removed successfully.');
             const rowToRemove = document.querySelector(`tr[data-userid="${followingId}"]`);
             if (rowToRemove) {
                 rowToRemove.remove();
